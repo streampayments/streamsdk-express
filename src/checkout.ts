@@ -1,5 +1,5 @@
 import type { Response, NextFunction } from 'express';
-import StreamSDK from 'stream-sdk';
+import StreamSDK from '@streamsdk/typescript';
 import type { CheckoutConfig, CheckoutRequest } from './types';
 
 /**
@@ -8,7 +8,7 @@ import type { CheckoutConfig, CheckoutRequest } from './types';
  * @example
  * ```typescript
  * import express from 'express';
- * import { Checkout } from 'stream-sdk/express';
+ * import { Checkout } from '@streamsdk/express';
  *
  * const app = express();
  *

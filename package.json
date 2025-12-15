@@ -1,5 +1,5 @@
 {
-  "name": "stream-sdk-express",
+  "name": "@streamsdk/express",
   "version": "1.0.0",
   "description": "Express.js adapter for Stream SDK - Declarative handlers for checkout and webhooks",
   "license": "MIT",
@@ -10,7 +10,6 @@
   },
   "keywords": [
     "stream",
-    "streampay",
     "payment",
     "express",
     "adapter",
@@ -20,18 +19,21 @@
     "typescript",
     "saudi-arabia"
   ],
-  "author": "StreamPay <support@streampay.sa>",
+  "author": "Stream <support@streampay.sa>",
   "contributors": [
     "Ibtisam <ibtisam@streampay.sa>"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/streampayments/stream-sdk-express.git"
+    "url": "git+https://github.com/streampayments/streamsdk-express.git"
   },
   "bugs": {
-    "url": "https://github.com/streampayments/stream-sdk-express/issues"
+    "url": "https://github.com/streampayments/streamsdk-express/issues"
   },
-  "homepage": "https://github.com/streampayments/stream-sdk-express#readme",
+  "homepage": "https://github.com/streampayments/streamsdk-express#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -45,7 +47,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "tsup",
@@ -57,7 +60,7 @@
     "express": "^4.18.0 || ^5.0.0"
   },
   "dependencies": {
-    "stream-sdk": "file:../stream-sdk"
+    "@streamsdk/typescript": "^1.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

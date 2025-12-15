@@ -8,7 +8,7 @@ import type { WebhookConfig, WebhookPayload } from './types';
  * @example
  * ```typescript
  * import express from 'express';
- * import { Webhooks } from 'stream-sdk/express';
+ * import { Webhooks } from '@streamsdk/express';
  *
  * const app = express();
  *

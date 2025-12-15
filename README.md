@@ -1,12 +1,12 @@
-# stream-sdk-express
+# streamsdk-express
 
 <div align="center">
-  <img src="https://streampay.sa/logo.png" alt="StreamPay Logo" width="200"/>
+  <img src="https://streampay.sa/logo.png" alt="Stream Logo" width="200"/>
 
   Express.js adapter for Stream SDK - Declarative handlers for checkout and webhooks
 
-  [![npm version](https://img.shields.io/npm/v/stream-sdk-express.svg)](https://www.npmjs.com/package/stream-sdk-express)
-  [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+  [![npm version](https://img.shields.io/npm/v/@streamsdk/express.svg)](https://www.npmjs.com/package/@streamsdk/express)
+  [![TypeScript](https://img.shields.io/npm/v/@streamsdk/typescript.svg)](https://www.npmjs.com/package/@streamsdk/typescript)
   [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 </div>
 
@@ -35,7 +35,7 @@
 
 ## Overview
 
-The Stream SDK Express adapter provides a clean, declarative way to integrate StreamPay payments into your Express.js applications. Built on top of [stream-sdk](https://github.com/streampayments/stream-sdk), it offers drop-in handlers for checkout flows and webhook processing.
+The Stream SDK Express adapter provides a clean, declarative way to integrate Stream payments into your Express.js applications. Built on top of [@streamsdk/typescript](https://github.com/streampayments/streamsdk-typescript), it offers drop-in handlers for checkout flows and webhook processing.
 
 **Key Benefits:**
 - 🚀 **Simple Integration** - Add payment processing in minutes
@@ -49,19 +49,17 @@ The Stream SDK Express adapter provides a clean, declarative way to integrate St
 
 ## Installation
 
-### NPM (Coming Soon)
-
 ```bash
-npm install stream-sdk-express
+npm install @streamsdk/express
 ```
 
-### GitHub
+**Or install from GitHub:**
 
 ```bash
-npm install github:streampayments/stream-sdk-express#v1.0.0
+npm install github:streampayments/streamsdk-express#v1.0.0
 ```
 
-**Note:** This package requires [stream-sdk](https://github.com/streampayments/stream-sdk) as a dependency, which will be installed automatically.
+**Note:** This package requires [@streamsdk/typescript](https://github.com/streampayments/streamsdk-typescript) as a dependency, which will be installed automatically.
 
 ---
 
@@ -69,7 +67,7 @@ npm install github:streampayments/stream-sdk-express#v1.0.0
 
 ```typescript
 import express from 'express';
-import { Checkout, Webhooks } from 'stream-sdk-express';
+import { Checkout, Webhooks } from '@streamsdk/express';
 
 const app = express();
 app.use(express.json());
@@ -116,12 +114,12 @@ app.listen(3000);
 
 ### Checkout Handler
 
-The `Checkout` handler creates payment links and redirects users to the StreamPay checkout page.
+The `Checkout` handler creates payment links and redirects users to the Stream checkout page.
 
 #### Basic Example
 
 ```typescript
-import { Checkout } from 'stream-sdk-express';
+import { Checkout } from '@streamsdk/express';
 
 app.get('/checkout', Checkout({
   apiKey: process.env.STREAM_API_KEY!,
@@ -164,12 +162,12 @@ app.get('/checkout', Checkout({
 
 ### Webhook Handler
 
-The `Webhooks` handler processes webhook events from StreamPay.
+The `Webhooks` handler processes webhook events from Stream.
 
 #### Basic Example
 
 ```typescript
-import { Webhooks } from 'stream-sdk-express';
+import { Webhooks } from '@streamsdk/express';
 
 app.post('/webhooks/stream', Webhooks({
   apiKey: process.env.STREAM_API_KEY!,
@@ -330,6 +328,7 @@ See the usage examples throughout this README for common patterns:
 - [Checkout Handler](#checkout-handler) - Payment link creation
 - [Webhook Handler](#webhook-handler) - Event processing
 - [Advanced Usage](#advanced-usage) - Custom configurations
+- [Express Example Repository](https://github.com/streampayments/streamsdk-express/tree/main/examples) - Sample implementation
 
 ---
 
@@ -355,7 +354,7 @@ import type {
   CheckoutRequest,
   WebhookConfig,
   WebhookPayload
-} from 'stream-sdk-express';
+} from '@streamsdk/typescript';
 ```
 
 ---
@@ -384,8 +383,8 @@ We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md)
 
 ```bash
 # Clone the repository
-git clone https://github.com/streampayments/stream-sdk-express.git
-cd stream-sdk-express
+git clone https://github.com/streampayments/streamsdk-express.git
+cd streamsdk-express
 
 # Install dependencies
 npm install
@@ -403,15 +402,15 @@ npm test
 
 ### Documentation
 
-- **[Stream SDK Documentation](https://github.com/streampayments/stream-sdk)**
+- **[@streamsdk/typescript Documentation](https://github.com/streampayments/streamsdk-typescript)**
 - **[API Documentation](https://docs.streampay.sa/)**
 - **[OpenAPI Specification](https://stream-app-service.streampay.sa/openapi.json)**
 
 ### Help & Issues
 
 - **📧 Email:** support@streampay.sa
-- **🐛 Issues:** [GitHub Issues](https://github.com/streampayments/stream-sdk-express/issues)
-- **💬 Discussions:** [GitHub Discussions](https://github.com/streampayments/stream-sdk-express/discussions)
+- **🐛 Issues:** [GitHub Issues](https://github.com/streampayments/streamsdk-express/issues)
+- **💬 Discussions:** [GitHub Discussions](https://github.com/streampayments/streamsdk-express/discussions)
 
 ---
 
@@ -422,7 +421,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 ---
 
 <div align="center">
-  <p>Made with ❤️ by <a href="https://streampay.sa">StreamPay</a></p>
+  <p>Made with ❤️ by <a href="https://streampay.sa">Stream</a></p>
   <p>
     <a href="https://streampay.sa">Website</a> •
     <a href="https://docs.streampay.sa">Documentation</a> •
