@@ -89,8 +89,8 @@ app.post(
   "/webhooks/stream",
   Webhooks({
     apiKey: process.env.STREAM_API_KEY!,
-    onPaymentCompleted: async (data) => {
-      console.log("Payment completed:", data);
+    onPaymentSucceeded: async (data) => {
+      console.log("Payment succeeded:", data);
       // Update database, send emails, etc.
     },
   })
@@ -190,7 +190,7 @@ app.post(
     apiKey: process.env.STREAM_API_KEY!,
     webhookSecret: process.env.STREAM_WEBHOOK_SECRET,
 
-    onPaymentCompleted: async (data) => {
+    onPaymentSucceeded: async (data) => {
       // Update your database
       await db.orders.update({
         where: { paymentId: data.id },
@@ -216,17 +216,23 @@ app.post(
 
 #### Supported Events
 
-| Event                    | Handler                   | Description                    |
-| ------------------------ | ------------------------- | ------------------------------ |
-| `payment.created`        | `onPaymentCreated`        | Payment link created           |
-| `payment.completed`      | `onPaymentCompleted`      | Payment successfully processed |
-| `payment.paid`           | `onPaymentCompleted`      | Payment successfully processed |
-| `payment.failed`         | `onPaymentFailed`         | Payment failed                 |
-| `subscription.created`   | `onSubscriptionCreated`   | New subscription created       |
-| `subscription.updated`   | `onSubscriptionUpdated`   | Subscription modified          |
-| `subscription.cancelled` | `onSubscriptionCancelled` | Subscription cancelled         |
-| `invoice.created`        | `onInvoiceCreated`        | Invoice generated              |
-| `invoice.paid`           | `onInvoicePaid`           | Invoice payment received       |
+| Event                      | Handler                     | Description                    |
+| -------------------------- | --------------------------- | ------------------------------ |
+| `PAYMENT_SUCCEEDED`        | `onPaymentSucceeded`        | Payment successfully processed |
+| `PAYMENT_FAILED`           | `onPaymentFailed`           | Payment failed                 |
+| `PAYMENT_CANCELED`         | `onPaymentCanceled`         | Payment cancelled              |
+| `PAYMENT_REFUNDED`         | `onPaymentRefunded`         | Payment refunded               |
+| `PAYMENT_MARKED_AS_PAID`   | `onPaymentMarkedAsPaid`     | Payment marked as paid         |
+| `INVOICE_CREATED`          | `onInvoiceCreated`          | Invoice generated              |
+| `INVOICE_SENT`             | `onInvoiceSent`             | Invoice sent to customer       |
+| `INVOICE_ACCEPTED`         | `onInvoiceAccepted`         | Invoice accepted               |
+| `INVOICE_REJECTED`         | `onInvoiceRejected`         | Invoice rejected               |
+| `INVOICE_COMPLETED`        | `onInvoiceCompleted`        | Invoice completed              |
+| `INVOICE_CANCELED`         | `onInvoiceCanceled`         | Invoice cancelled              |
+| `INVOICE_UPDATED`          | `onInvoiceUpdated`          | Invoice updated                |
+| `SUBSCRIPTION_CREATED`     | `onSubscriptionCreated`     | New subscription created       |
+| `SUBSCRIPTION_UPDATED`     | `onSubscriptionUpdated`     | Subscription modified          |
+| `SUBSCRIPTION_CANCELED`    | `onSubscriptionCanceled`    | Subscription cancelled         |
 
 #### Catch-All Handler
 
@@ -331,15 +337,26 @@ interface WebhookConfig {
   apiKey: string;
   webhookSecret?: string; // For signature verification (recommended)
 
-  // Specific event handlers
-  onPaymentCreated?: (data: any) => void | Promise<void>;
-  onPaymentCompleted?: (data: any) => void | Promise<void>;
+  // Payment event handlers
+  onPaymentSucceeded?: (data: any) => void | Promise<void>;
   onPaymentFailed?: (data: any) => void | Promise<void>;
+  onPaymentCanceled?: (data: any) => void | Promise<void>;
+  onPaymentRefunded?: (data: any) => void | Promise<void>;
+  onPaymentMarkedAsPaid?: (data: any) => void | Promise<void>;
+
+  // Invoice event handlers
+  onInvoiceCreated?: (data: any) => void | Promise<void>;
+  onInvoiceSent?: (data: any) => void | Promise<void>;
+  onInvoiceAccepted?: (data: any) => void | Promise<void>;
+  onInvoiceRejected?: (data: any) => void | Promise<void>;
+  onInvoiceCompleted?: (data: any) => void | Promise<void>;
+  onInvoiceCanceled?: (data: any) => void | Promise<void>;
+  onInvoiceUpdated?: (data: any) => void | Promise<void>;
+
+  // Subscription event handlers
   onSubscriptionCreated?: (data: any) => void | Promise<void>;
   onSubscriptionUpdated?: (data: any) => void | Promise<void>;
-  onSubscriptionCancelled?: (data: any) => void | Promise<void>;
-  onInvoiceCreated?: (data: any) => void | Promise<void>;
-  onInvoicePaid?: (data: any) => void | Promise<void>;
+  onSubscriptionCanceled?: (data: any) => void | Promise<void>;
 
   // Catch-all handler
   onWebhook?: (event: string, data: any) => void | Promise<void>;
