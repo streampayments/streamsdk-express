@@ -1,13 +1,14 @@
 # streamsdk-express
 
 <div align="center">
-  <img src="https://streampay.sa/logo.png" alt="Stream Logo" width="200"/>
+  <img src="https://app.streampay.sa/media/logos/dark-logo.svg" alt="Stream Logo" width="200"/>
 
-  Express.js adapter for Stream SDK - Declarative handlers for checkout and webhooks
+Express.js adapter for Stream SDK - Declarative handlers for checkout and webhooks
 
-  [![npm version](https://img.shields.io/npm/v/@streamsdk/express.svg)](https://www.npmjs.com/package/@streamsdk/express)
-  [![TypeScript](https://img.shields.io/npm/v/@streamsdk/typescript.svg)](https://www.npmjs.com/package/@streamsdk/typescript)
-  [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![npm version](https://img.shields.io/npm/v/@streamsdk/express.svg)](https://www.npmjs.com/package/@streamsdk/express)
+[![TypeScript](https://img.shields.io/npm/v/@streamsdk/typescript.svg)](https://www.npmjs.com/package/@streamsdk/typescript)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 </div>
 
 ---
@@ -38,6 +39,7 @@
 The Stream SDK Express adapter provides a clean, declarative way to integrate Stream payments into your Express.js applications. Built on top of [@streamsdk/typescript](https://github.com/streampayments/streamsdk-typescript), it offers drop-in handlers for checkout flows and webhook processing.
 
 **Key Benefits:**
+
 - 🚀 **Simple Integration** - Add payment processing in minutes
 - 🔒 **Type-Safe** - Full TypeScript support with type definitions
 - 🎯 **Event-Driven** - Clean event handlers for webhook processing
@@ -66,32 +68,39 @@ npm install github:streampayments/streamsdk-express#v1.0.0
 ## Quick Start
 
 ```typescript
-import express from 'express';
-import { Checkout, Webhooks } from '@streamsdk/express';
+import express from "express";
+import { Checkout, Webhooks } from "@streamsdk/express";
 
 const app = express();
 app.use(express.json());
 
 // Checkout handler
-app.get('/checkout', Checkout({
-  apiKey: process.env.STREAM_API_KEY!,
-  successUrl: 'https://myapp.com/success',
-  returnUrl: 'https://myapp.com/cancel'
-}));
+app.get(
+  "/checkout",
+  Checkout({
+    apiKey: process.env.STREAM_API_KEY!,
+    successUrl: "https://myapp.com/success",
+    returnUrl: "https://myapp.com/cancel",
+  })
+);
 
 // Webhook handler
-app.post('/webhooks/stream', Webhooks({
-  apiKey: process.env.STREAM_API_KEY!,
-  onPaymentCompleted: async (data) => {
-    console.log('Payment completed:', data);
-    // Update database, send emails, etc.
-  }
-}));
+app.post(
+  "/webhooks/stream",
+  Webhooks({
+    apiKey: process.env.STREAM_API_KEY!,
+    onPaymentCompleted: async (data) => {
+      console.log("Payment completed:", data);
+      // Update database, send emails, etc.
+    },
+  })
+);
 
 app.listen(3000);
 ```
 
 **Usage:**
+
 ```
 /checkout?products=prod_123&customerPhone=%2B966501234567&customerName=Ahmad%20Ali
 ```
@@ -119,41 +128,47 @@ The `Checkout` handler creates payment links and redirects users to the Stream c
 #### Basic Example
 
 ```typescript
-import { Checkout } from '@streamsdk/express';
+import { Checkout } from "@streamsdk/express";
 
-app.get('/checkout', Checkout({
-  apiKey: process.env.STREAM_API_KEY!,
-  successUrl: 'https://myapp.com/payment/success',
-  returnUrl: 'https://myapp.com/payment/cancelled',
-  defaultName: 'My Store Checkout'
-}));
+app.get(
+  "/checkout",
+  Checkout({
+    apiKey: process.env.STREAM_API_KEY!,
+    successUrl: "https://myapp.com/payment/success",
+    returnUrl: "https://myapp.com/payment/cancelled",
+    defaultName: "My Store Checkout",
+  })
+);
 ```
 
 #### Query Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `products` | string | Yes | Product ID(s), comma-separated for multiple |
-| `name` | string | No | Custom name for payment link (overrides defaultName) |
-| `customerId` | string | No | Existing customer/consumer ID |
-| `customerEmail` | string | No | Customer email for new customers |
-| `customerName` | string | No | Customer name for new customers |
-| `customerPhone` | string | No | Customer phone for new customers |
-| `metadata` | string | No | URL-encoded JSON metadata |
+| Parameter       | Type   | Required | Description                                          |
+| --------------- | ------ | -------- | ---------------------------------------------------- |
+| `products`      | string | Yes      | Product ID(s), comma-separated for multiple          |
+| `name`          | string | No       | Custom name for payment link (overrides defaultName) |
+| `customerId`    | string | No       | Existing customer/consumer ID                        |
+| `customerEmail` | string | No       | Customer email for new customers                     |
+| `customerName`  | string | No       | Customer name for new customers                      |
+| `customerPhone` | string | No       | Customer phone for new customers                     |
+| `metadata`      | string | No       | URL-encoded JSON metadata                            |
 
 #### Usage Examples
 
 **Single Product with New Customer:**
+
 ```
 /checkout?products=prod_123&customerPhone=%2B966501234567&customerName=Mohammad%20Ahmad
 ```
 
 **Multiple Products:**
+
 ```
 /checkout?products=prod_123,prod_456&customerId=cons_789
 ```
 
 **With Metadata:**
+
 ```
 /checkout?products=prod_123&metadata=%7B%22orderId%22%3A%22ORD-123%22%7D
 ```
@@ -167,62 +182,68 @@ The `Webhooks` handler processes webhook events from Stream.
 #### Basic Example
 
 ```typescript
-import { Webhooks } from '@streamsdk/express';
+import { Webhooks } from "@streamsdk/express";
 
-app.post('/webhooks/stream', Webhooks({
-  apiKey: process.env.STREAM_API_KEY!,
-  webhookSecret: process.env.STREAM_WEBHOOK_SECRET,
+app.post(
+  "/webhooks/stream",
+  Webhooks({
+    apiKey: process.env.STREAM_API_KEY!,
+    webhookSecret: process.env.STREAM_WEBHOOK_SECRET,
 
-  onPaymentCompleted: async (data) => {
-    // Update your database
-    await db.orders.update({
-      where: { paymentId: data.id },
-      data: { status: 'paid', paidAt: new Date() }
-    });
+    onPaymentCompleted: async (data) => {
+      // Update your database
+      await db.orders.update({
+        where: { paymentId: data.id },
+        data: { status: "paid", paidAt: new Date() },
+      });
 
-    // Send confirmation email
-    await sendEmail({
-      to: data.customer_email,
-      subject: 'Payment Confirmed',
-      template: 'payment-confirmation',
-      data: { amount: data.amount, orderId: data.metadata?.orderId }
-    });
-  },
+      // Send confirmation email
+      await sendEmail({
+        to: data.customer_email,
+        subject: "Payment Confirmed",
+        template: "payment-confirmation",
+        data: { amount: data.amount, orderId: data.metadata?.orderId },
+      });
+    },
 
-  onPaymentFailed: async (data) => {
-    console.log('Payment failed:', data.failure_reason);
-    // Handle failed payment
-  }
-}));
+    onPaymentFailed: async (data) => {
+      console.log("Payment failed:", data.failure_reason);
+      // Handle failed payment
+    },
+  })
+);
 ```
 
 #### Supported Events
 
-| Event | Handler | Description |
-|-------|---------|-------------|
-| `payment.created` | `onPaymentCreated` | Payment link created |
-| `payment.completed` | `onPaymentCompleted` | Payment successfully processed |
-| `payment.paid` | `onPaymentCompleted` | Payment successfully processed |
-| `payment.failed` | `onPaymentFailed` | Payment failed |
-| `subscription.created` | `onSubscriptionCreated` | New subscription created |
-| `subscription.updated` | `onSubscriptionUpdated` | Subscription modified |
-| `subscription.cancelled` | `onSubscriptionCancelled` | Subscription cancelled |
-| `invoice.created` | `onInvoiceCreated` | Invoice generated |
-| `invoice.paid` | `onInvoicePaid` | Invoice payment received |
+| Event                    | Handler                   | Description                    |
+| ------------------------ | ------------------------- | ------------------------------ |
+| `payment.created`        | `onPaymentCreated`        | Payment link created           |
+| `payment.completed`      | `onPaymentCompleted`      | Payment successfully processed |
+| `payment.paid`           | `onPaymentCompleted`      | Payment successfully processed |
+| `payment.failed`         | `onPaymentFailed`         | Payment failed                 |
+| `subscription.created`   | `onSubscriptionCreated`   | New subscription created       |
+| `subscription.updated`   | `onSubscriptionUpdated`   | Subscription modified          |
+| `subscription.cancelled` | `onSubscriptionCancelled` | Subscription cancelled         |
+| `invoice.created`        | `onInvoiceCreated`        | Invoice generated              |
+| `invoice.paid`           | `onInvoicePaid`           | Invoice payment received       |
 
 #### Catch-All Handler
 
 Use `onWebhook` to handle all events:
 
 ```typescript
-app.post('/webhooks/stream', Webhooks({
-  apiKey: process.env.STREAM_API_KEY!,
+app.post(
+  "/webhooks/stream",
+  Webhooks({
+    apiKey: process.env.STREAM_API_KEY!,
 
-  onWebhook: async (event, data) => {
-    console.log(`Webhook: ${event}`, data);
-    await logWebhookEvent(event, data);
-  }
-}));
+    onWebhook: async (event, data) => {
+      console.log(`Webhook: ${event}`, data);
+      await logWebhookEvent(event, data);
+    },
+  })
+);
 ```
 
 ---
@@ -232,18 +253,21 @@ app.post('/webhooks/stream', Webhooks({
 #### Custom Error Handling
 
 ```typescript
-app.get('/checkout', Checkout({
-  apiKey: process.env.STREAM_API_KEY!,
-  successUrl: 'https://myapp.com/success',
-  returnUrl: 'https://myapp.com/cancel'
-}));
+app.get(
+  "/checkout",
+  Checkout({
+    apiKey: process.env.STREAM_API_KEY!,
+    successUrl: "https://myapp.com/success",
+    returnUrl: "https://myapp.com/cancel",
+  })
+);
 
 // Add error handler after checkout route
 app.use((error, req, res, next) => {
-  console.error('Checkout error:', error);
+  console.error("Checkout error:", error);
   res.status(500).json({
-    error: 'Failed to create checkout session',
-    message: error.message
+    error: "Failed to create checkout session",
+    message: error.message,
   });
 });
 ```
@@ -251,21 +275,25 @@ app.use((error, req, res, next) => {
 #### Dynamic Configuration
 
 ```typescript
-app.get('/checkout/:tier', (req, res, next) => {
-  const { tier } = req.params;
+app.get(
+  "/checkout/:tier",
+  (req, res, next) => {
+    const { tier } = req.params;
 
-  // Get product ID based on tier
-  const productId = getProductIdForTier(tier);
+    // Get product ID based on tier
+    const productId = getProductIdForTier(tier);
 
-  // Add product to query
-  req.query.products = productId;
+    // Add product to query
+    req.query.products = productId;
 
-  next();
-}, Checkout({
-  apiKey: process.env.STREAM_API_KEY!,
-  successUrl: `https://myapp.com/success?tier=${req.params.tier}`,
-  returnUrl: 'https://myapp.com/cancel'
-}));
+    next();
+  },
+  Checkout({
+    apiKey: process.env.STREAM_API_KEY!,
+    successUrl: `https://myapp.com/success?tier=${req.params.tier}`,
+    returnUrl: "https://myapp.com/cancel",
+  })
+);
 ```
 
 #### Testing Webhooks Locally
@@ -288,11 +316,11 @@ ngrok http 3000
 
 ```typescript
 interface CheckoutConfig {
-  apiKey: string;           // Stream API key (required)
-  successUrl: string;       // Redirect URL after successful payment (required)
-  returnUrl?: string;       // Redirect URL on cancellation (optional)
-  baseUrl?: string;         // Custom Stream API base URL (optional)
-  defaultName?: string;     // Default name for payment links (optional)
+  apiKey: string; // Stream API key (required)
+  successUrl: string; // Redirect URL after successful payment (required)
+  returnUrl?: string; // Redirect URL on cancellation (optional)
+  baseUrl?: string; // Custom Stream API base URL (optional)
+  defaultName?: string; // Default name for payment links (optional)
 }
 ```
 
@@ -301,7 +329,7 @@ interface CheckoutConfig {
 ```typescript
 interface WebhookConfig {
   apiKey: string;
-  webhookSecret?: string;   // For signature verification (recommended)
+  webhookSecret?: string; // For signature verification (recommended)
 
   // Specific event handlers
   onPaymentCreated?: (data: any) => void | Promise<void>;
@@ -353,8 +381,8 @@ import type {
   CheckoutQuery,
   CheckoutRequest,
   WebhookConfig,
-  WebhookPayload
-} from '@streamsdk/typescript';
+  WebhookPayload,
+} from "@streamsdk/typescript";
 ```
 
 ---
