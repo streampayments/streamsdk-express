@@ -324,19 +324,12 @@ interface WebhookConfig {
 
 ## Examples
 
-Complete working examples:
+See the usage examples throughout this README for common patterns:
 
-```bash
-# Clone the repository
-git clone https://github.com/streampayments/stream-sdk-express.git
-cd stream-sdk-express/examples
-
-# Install dependencies
-npm install
-
-# Run example server
-npm start
-```
+- [Quick Start](#quick-start) - Basic setup
+- [Checkout Handler](#checkout-handler) - Payment link creation
+- [Webhook Handler](#webhook-handler) - Event processing
+- [Advanced Usage](#advanced-usage) - Custom configurations
 
 ---
 
@@ -412,7 +405,7 @@ npm test
 
 - **[Stream SDK Documentation](https://github.com/streampayments/stream-sdk)**
 - **[API Documentation](https://docs.streampay.sa/)**
-- **[Examples](./examples)**
+- **[OpenAPI Specification](https://stream-app-service.streampay.sa/openapi.json)**
 
 ### Help & Issues
 
