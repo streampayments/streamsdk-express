@@ -1,12 +1,15 @@
 # streamsdk-express
 
 <div align="center">
-  <img src="https://app.streampay.sa/media/logos/dark-logo.svg" alt="Stream Logo" width="200"/>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://app.streampay.sa/media/logos/light-logo.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://app.streampay.sa/media/logos/dark-logo.svg">
+    <img src="https://app.streampay.sa/media/logos/dark-logo.svg" alt="Stream Logo" width="200"/>
+  </picture>
 
 Express.js adapter for Stream SDK - Declarative handlers for checkout and webhooks
 
 [![npm version](https://img.shields.io/npm/v/@streamsdk/express.svg)](https://www.npmjs.com/package/@streamsdk/express)
-[![TypeScript](https://img.shields.io/npm/v/@streamsdk/typescript.svg)](https://www.npmjs.com/package/@streamsdk/typescript)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 </div>
@@ -25,6 +28,7 @@ Express.js adapter for Stream SDK - Declarative handlers for checkout and webhoo
   - [Advanced Usage](#advanced-usage)
 - [Configuration](#configuration)
 - [Examples](#examples)
+- [Demo](#demo)
 - [Best Practices](#best-practices)
 - [TypeScript Support](#typescript-support)
 - [API Reference](#api-reference)
@@ -374,6 +378,12 @@ See the usage examples throughout this README for common patterns:
 - [Webhook Handler](#webhook-handler) - Event processing
 - [Advanced Usage](#advanced-usage) - Custom configurations
 - [Express Example Repository](https://github.com/streampayments/streamsdk-express/tree/main/examples) - Sample implementation
+
+---
+
+## Demo
+
+Check out the [demo application](https://github.com/streampayments/stream-express-sdk-demo/) for a small demo example.
 
 ---
 
