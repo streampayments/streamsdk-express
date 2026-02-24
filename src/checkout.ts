@@ -76,25 +76,93 @@ export function Checkout(config: CheckoutConfig) {
 
       // If no customer ID but have customer details, create or find consumer
       if (!consumerId && (customerPhone || customerEmail)) {
-        if (customerPhone) {
-          // Try to find existing consumer by phone
-          const consumers = await streamClient.listConsumers({ page: 1, size: 100 });
-          const existingConsumer = consumers.data?.find(c => c.phone_number === customerPhone);
+        let existingConsumer = null;
 
-          if (existingConsumer) {
-            consumerId = existingConsumer.id;
-          } else if (customerName) {
-            // Create new consumer
-            const consumerData: any = {
-              phone_number: customerPhone,
-              name: customerName || 'Customer'
-            };
-            if (customerEmail) {
-              consumerData.email = customerEmail;
-            }
-            const newConsumer = await streamClient.createConsumer(consumerData);
-            consumerId = newConsumer.id;
+        // Strategy 1: Try to search by phone using search_term (most specific)
+        if (customerPhone) {
+          try {
+            const searchResults = await streamClient.listConsumers({
+              page: 1,
+              size: 100,
+              search_term: customerPhone
+            } as any);
+            existingConsumer = searchResults.data?.find(c => c.phone_number === customerPhone);
+          } catch (searchError) {
+            // Search failed, will try next strategy
+            console.warn('Search by phone failed, trying email search');
           }
+        }
+
+        // Strategy 2: Try to search by email if phone search didn't find anything
+        if (!existingConsumer && customerEmail) {
+          try {
+            const searchResults = await streamClient.listConsumers({
+              page: 1,
+              size: 100,
+              search_term: customerEmail
+            } as any);
+            existingConsumer = searchResults.data?.find(c =>
+              c.email === customerEmail || c.phone_number === customerPhone
+            );
+          } catch (searchError) {
+            // Search failed, will try pagination
+            console.warn('Search by email failed, falling back to pagination');
+          }
+        }
+
+        // Strategy 3: If not found via search, paginate through all consumers (last resort)
+        if (!existingConsumer && (customerPhone || customerEmail)) {
+          let currentPage = 1;
+          const pageSize = 100;
+          let hasMorePages = true;
+
+          while (hasMorePages && !existingConsumer) {
+            const consumers = await streamClient.listConsumers({
+              page: currentPage,
+              size: pageSize
+            });
+
+            // Try to match by phone or email
+            existingConsumer = consumers.data?.find(c =>
+              (customerPhone && c.phone_number === customerPhone) ||
+              (customerEmail && c.email === customerEmail)
+            );
+
+            if (existingConsumer) {
+              break;
+            }
+
+            // Check if there are more pages
+            hasMorePages = consumers.pagination?.has_next_page || false;
+            currentPage++;
+
+            // Safety limit to prevent infinite loops (max 50 pages = 5000 consumers)
+            if (currentPage > 50) {
+              console.warn('Reached maximum page limit (50), stopping consumer search');
+              break;
+            }
+          }
+        }
+
+        // If consumer found, use it
+        if (existingConsumer) {
+          consumerId = existingConsumer.id;
+        } else if (customerName) {
+          // Create new consumer if not found
+          const consumerData: any = {
+            name: customerName || 'Customer'
+          };
+
+          if (customerPhone) {
+            consumerData.phone_number = customerPhone;
+          }
+
+          if (customerEmail) {
+            consumerData.email = customerEmail;
+          }
+
+          const newConsumer = await streamClient.createConsumer(consumerData);
+          consumerId = newConsumer.id;
         }
       }
 
