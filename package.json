@@ -1,6 +1,6 @@
 {
   "name": "@streamsdk/express",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Express.js adapter for Stream SDK - Declarative handlers for checkout and webhooks",
   "license": "MIT",
   "type": "module",
