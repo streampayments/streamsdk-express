@@ -62,9 +62,11 @@ export function Checkout(config: CheckoutConfig) {
       // Prepare payment link data
       const paymentLinkData: any = {
         name: paymentLinkName,
+        currency: 'SAR',
         items: productIds.map(id => ({
           product_id: id,
-          quantity: 1
+          quantity: 1,
+          allow_custom_quantity: false,
         })),
         success_redirect_url: config.successUrl,
         failure_redirect_url: config.returnUrl || config.successUrl,
@@ -174,7 +176,7 @@ export function Checkout(config: CheckoutConfig) {
       if (metadata) {
         try {
           const parsedMetadata = JSON.parse(decodeURIComponent(metadata));
-          paymentLinkData.metadata = parsedMetadata;
+          paymentLinkData.custom_metadata = parsedMetadata;
         } catch (e) {
           // Invalid metadata format, skip
         }
